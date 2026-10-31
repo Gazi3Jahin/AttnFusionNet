@@ -4,9 +4,7 @@
 
 AttnFusionNet is an exploratory deep-learning framework developed to investigate the use of complementary spatial and functional connectivity representations for Autism Spectrum Disorder (ASD) classification using resting-state functional MRI (rs-fMRI).
 
-The central idea is to examine whether information learned from brain-image representations and inter-regional functional connectivity can be integrated within a unified learning framework.
-
-Instead of relying on a single representation of resting-state fMRI, the proposed architecture follows two parallel feature extraction pathways:
+The central idea is to examine whether information learned from brain-image representations and inter-regional functional connectivity can be integrated within a unified learning framework. Instead of relying on a single representation of resting-state fMRI, the proposed architecture follows two parallel feature extraction pathways:
 
 > **Spatial feature learning:** A convolutional neural network (CNN) extracts image-based representations from fMRI-derived axial slices.
 
@@ -22,13 +20,9 @@ Beyond model development, the project explores branch-specific contributions, at
 
 Resting-state fMRI provides an opportunity to investigate patterns of spontaneous brain activity and functional relationships between different brain regions.
 
-However, these characteristics can be represented in different ways.
+However, these characteristics can be represented in different ways. Image-based representations preserve spatial information that can be learned through convolutional operations. Functional connectivity, on the other hand, describes statistical relationships between regional brain signals.
 
-Image-based representations preserve spatial information that can be learned through convolutional operations. Functional connectivity, on the other hand, describes statistical relationships between regional brain signals.
-
-These representations capture different aspects of the data, and their relative usefulness may depend on the classification task and the characteristics of the cohort.
-
-AttnFusionNet was developed to investigate this complementary feature-learning approach.
+These representations capture different aspects of the data, and their relative usefulness may depend on the classification task and the characteristics of the cohort. AttnFusionNet was developed to investigate this complementary feature-learning approach.
 
 The methodological objectives are to:
 
@@ -50,15 +44,11 @@ The methodological objectives are to:
 
 The experiments use resting-state fMRI data from the Autism Brain Imaging Data Exchange II (ABIDE II).
 
-The selected cohort consists of ASD participants and typically developing controls. Diagnostic grouping is based on the ABIDE diagnostic label, DX_GROUP.
-
-The dataset includes participants from multiple acquisition sites, making it relevant for exploring the challenges associated with heterogeneous neuroimaging data.
+The selected cohort consists of ASD participants and typically developing controls. Diagnostic grouping is based on the ABIDE diagnostic label, DX_GROUP. The dataset includes participants from multiple acquisition sites, making it relevant for exploring the challenges associated with heterogeneous neuroimaging data.
 
 ### Data preparation
 
-The experimental workflow involves preparing participant-level imaging data and constructing the representations required by the two feature extraction branches.
-
-The principal preparation stages include:
+The experimental workflow involves preparing participant-level imaging data and constructing the representations required by the two feature extraction branches. The principal preparation stages include:
 
 - Organizing the selected resting-state fMRI volumes.
 
@@ -72,27 +62,17 @@ The principal preparation stages include:
 
 - Organizing the resulting features for participant-level model training and evaluation.
 
-A stratified participant-level training, validation, and testing strategy is used.
-
-This ensures that multiple image slices from the same participant are not independently distributed across the experimental subsets.
+A stratified participant-level training, validation, and testing strategy is used. This ensures that multiple image slices from the same participant are not independently distributed across the experimental subsets.
 
 ## 3. Dual-Branch Feature Extraction
 
-A central methodological component of AttnFusionNet is the use of separate feature extraction pathways.
-
-Each branch processes a different representation of the same underlying neuroimaging data.
+A central methodological component of AttnFusionNet is the use of separate feature extraction pathways. Each branch processes a different representation of the same underlying neuroimaging data.
 
 ### 3.1 Spatial Feature Extraction
 
-The spatial branch uses image representations derived from preprocessed resting-state fMRI volumes.
+The spatial branch uses image representations derived from preprocessed resting-state fMRI volumes. A temporal mean BOLD representation is generated, followed by the selection of axial slices. These slices are resized and represented as grayscale images before being passed to a custom CNN.
 
-A temporal mean BOLD representation is generated, followed by the selection of axial slices. These slices are resized and represented as grayscale images before being passed to a custom CNN.
-
-The CNN learns hierarchical spatial representations through convolutional feature extraction.
-
-This branch is intended to capture image-level patterns that may contribute to distinguishing the diagnostic groups.
-
-The use of a custom CNN provides a relatively straightforward approach to learning spatial features without introducing an unnecessarily complex image architecture.
+The CNN learns hierarchical spatial representations through convolutional feature extraction. This branch is intended to capture image-level patterns that may contribute to distinguishing the diagnostic groups. The use of a custom CNN provides a relatively straightforward approach to learning spatial features without introducing an unnecessarily complex image architecture.
 
 ### 3.2 Functional Connectivity Extraction
 
@@ -112,11 +92,7 @@ The connectivity construction procedure involves:
 
 - Preparing the connectivity features for neural network processing.
 
-The resulting connectivity matrix represents statistical relationships between brain regions.
-
-An MLP is employed to learn a compact feature representation from these connectivity patterns.
-
-This branch provides a network-level representation that complements the image-based spatial features learned by the CNN.
+The resulting connectivity matrix represents statistical relationships between brain regions. An MLP is employed to learn a compact feature representation from these connectivity patterns. This branch provides a network-level representation that complements the image-based spatial features learned by the CNN.
 
 ## 4. Attention-Based Multimodal Feature Fusion
 
@@ -124,17 +100,11 @@ This branch provides a network-level representation that complements the image-b
 
 After independent feature extraction, the spatial and connectivity representations are passed to the fusion component.
 
-The objective is to allow the model to learn how much importance to assign to each feature branch during classification.
-
-Rather than assuming that spatial and connectivity information contribute equally, the attention mechanism learns a relative weighting of their representations.
-
-This provides a way to investigate whether the model relies more heavily on image-derived features or functional connectivity patterns.
+The objective is to allow the model to learn how much importance to assign to each feature branch during classification. Rather than assuming that spatial and connectivity information contribute equally, the attention mechanism learns a relative weighting of their representations.
 
 ### 4.2 Classification
 
-The fused representation is passed to the classification component, which generates the final binary prediction.
-
-The architecture therefore follows a progression from modality-specific feature learning to joint representation and classification.
+The fused representation is passed to the classification component, which generates the final binary prediction. The architecture therefore follows a progression from modality-specific feature learning to joint representation and classification.
 
 ### 4.3 Architectural Rationale
 
@@ -152,11 +122,7 @@ The experimental workflow includes model training, validation-based monitoring, 
 
 ### Model training
 
-The network is trained using the training subset, while the validation subset is used to monitor learning behaviour and select the best-performing checkpoint.
-
-Early stopping is incorporated to limit unnecessary training when validation performance no longer improves.
-
-Training and validation histories are retained for examining the relationship between model fitting and generalization.
+The network is trained using the training subset, while the validation subset is used to monitor learning behaviour and select the best-performing checkpoint. Early stopping is incorporated to limit unnecessary training when validation performance no longer improves. Training and validation histories are retained for examining the relationship between model fitting and generalization.
 
 ### Branch-specific comparison
 
@@ -170,11 +136,7 @@ This comparison helps determine whether the fusion mechanism provides an advanta
 
 ### Evaluation
 
-The classification experiments are assessed using standard binary classification measures, including accuracy, precision, recall, F1-score, and ROC-AUC.
-
-Confusion matrices and ROC curves are also generated to examine prediction behaviour from different perspectives.
-
-An additional exploratory five-fold cross-validation experiment is conducted for the connectivity-only baseline to investigate variation across different data partitions.
+The classification experiments are assessed using standard binary classification measures, including accuracy, precision, recall, F1-score, and ROC-AUC. Confusion matrices and ROC curves are also generated to examine prediction behaviour from different perspectives. An additional exploratory five-fold cross-validation experiment is conducted for the connectivity-only baseline to investigate variation across different data partitions.
 
 The cross-validation experiment is treated separately from the held-out evaluation and is not presented as independent external validation.
 
@@ -198,23 +160,11 @@ Interpretability was explored through attention-weight analysis and Gradient-wei
 
 ### 7.1 Attention Analysis
 
-The learned attention weights were examined to understand how the fusion mechanism distributed importance between the spatial and connectivity branches.
-
-The analysis indicated that functional connectivity received substantially greater attention than the spatial representation.
-
-This provides insight into the model's internal weighting behaviour and offers a useful comparison with the branch-specific experimental results.
-
-However, attention weights should not be interpreted as definitive measures of biological importance, causal influence, or clinical relevance.
+The learned attention weights were examined to understand how the fusion mechanism distributed importance between the spatial and connectivity branches. The analysis indicated that functional connectivity received substantially greater attention than the spatial representation.
 
 ### 7.2 Grad-CAM
 
-Grad-CAM was applied to the CNN branch to examine spatial feature activations.
-
-The resulting visualization provides a qualitative view of the image regions that influence the spatial branch's learned representations.
-
-Since this implementation applies Grad-CAM to the spatial branch, it does not fully explain the final multimodal classification decision.
-
-The visualizations should therefore be understood as branch-specific exploratory explanations rather than complete explanations of the fused model.
+Grad-CAM was applied to the CNN branch to examine spatial feature activations. The resulting visualization provides a qualitative view of the image regions that influence the spatial branch's learned representations.
 
 ## 8. Limitations and Methodological Considerations
 
@@ -234,8 +184,6 @@ Several limitations are important when interpreting the experimental findings.
 
 - **Interpretability:** Attention and Grad-CAM provide useful views of model behaviour, but they do not establish biological mechanisms or causal relationships.
 
-These limitations are particularly relevant when working with small, heterogeneous neuroimaging cohorts.
-
 ## 9. Future Research Directions
 
 The current experiments suggest several opportunities for further investigation:
@@ -253,8 +201,6 @@ The current experiments suggest several opportunities for further investigation:
 - Investigating prediction calibration and uncertainty estimation.
 
 - Conducting more rigorous statistical analyses of regional connectivity patterns.
-
-These directions could help determine whether more carefully designed multimodal architectures can provide consistent benefits over individual neuroimaging representations.
 
 ## 10. Repository Structure
 
@@ -339,9 +285,7 @@ Di Martino, A., et al. (2017). Enhancing studies of the connectome in autism usi
 
 ## Disclaimer
 
-AttnFusionNet is an independent experimental research project developed for methodological exploration and portfolio demonstration.
-
-The model has not been clinically validated and must not be used for diagnosis, screening, treatment decisions, or other medical purposes.
+AttnFusionNet is an independent experimental research project developed for methodological exploration. The model has not been clinically validated and must not be used for diagnosis, screening, treatment decisions, or other medical purposes.
 
 The findings are specific to the experimental cohort and evaluation protocol. Further independent validation is required before drawing conclusions about clinical or population-level applicability.
 
